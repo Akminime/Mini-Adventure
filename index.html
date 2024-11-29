@@ -1,36 +1,95 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Mini Adventure Text-Based RPG</title>
-        <link rel="stylesheet" type="text/css" href="styles.css">
-    </head>
-    <body>
-        <div class="container">
-            <div class="left">
-                <div class="story-box">
-                    Story content goes here.
-                </div>
-                <div class="options">
-                    Options go here.
-                </div>
-            </div>
-            <div class="character">
-                <div class="CharName">
-                    <header id="characterName">&#123CharName&#125</header>
-                </div>
-                
-                <div class="stats">
-                    <div class="health">
-                        <header>100/100</header>
-                    </div>
-                    <div class="mana">
-                        <header>100/100</header>
-                    </div>
-                </div>
-                
-            </div>          
-            
-        </div>
-        <script src="script.js"></script>
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive GUI with Cookies</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #output {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="characterName">Welcome!</h1>
+    <div>
+        <label for="userName">Enter your name:</label>
+        <input type="text" id="userName" placeholder="Your Name">
+    </div>
+    <div>
+        <label for="userChoice">Choose an option:</label>
+        <select id="userChoice">
+            <option value="">-- Select an Option --</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+        </select>
+    </div>
+    <button id="submitButton">Submit</button>
+
+    <div id="output"></div>
+
+    <script>
+        const nameHeader = document.getElementById("characterName");
+        const submitButton = document.getElementById("submitButton");
+        const output = document.getElementById("output");
+
+        // Function to set a cookie
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+        }
+
+        // Function to get a cookie by name
+        function getCookie(name) {
+            const cookies = document.cookie.split("; ");
+            for (let cookie of cookies) {
+                const [key, value] = cookie.split("=");
+                if (key === name) {
+                    return value;
+                }
+            }
+            return null;
+        }
+
+        // Populate fields if cookies exist
+        window.onload = function() {
+            const savedName = getCookie("userName");
+            const savedChoice = getCookie("userChoice");
+
+            if (savedName && savedChoice) {
+                nameHeader.textContent = savedName;
+                output.textContent = `Welcome back, ${savedName}! You previously selected Option ${savedChoice}. Please wait to be moved to the game instance...`;
+                setTimeout(() => {
+                    window.location.href = "/game";
+                }, 3000);
+            }
+        };
+
+        submitButton.onclick = function() {
+            const userName = document.getElementById("userName").value;
+            const userChoice = document.getElementById("userChoice").value;
+
+            if (userName && userChoice) {
+                nameHeader.textContent = userName;
+                output.textContent = `Welcome, ${userName}! You selected Option ${userChoice}. Please wait to be moved to the game instance...`;
+                setTimeout(() => {
+                    window.location.href = "/game";
+                }, 3000);
+
+                // Save values as cookies
+                setCookie("userName", userName, 7); // Cookie expires in 7 days
+                setCookie("userChoice", userChoice, 7);
+            } else {
+                output.textContent = "You didn't provide enough information.";
+            }
+        };
+    </script>
+</body>
 </html>
