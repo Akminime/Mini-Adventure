@@ -31,7 +31,7 @@ function clearCookies() {
 function saveSessionData() {
     // Prompt user for their name and option
     const userName = prompt("Enter your name:");
-    const userChoice = prompt("Choose an option:\n1. Option 1\n2. Option 2\n3. Option 3");
+    const userChoice = prompt("Choose an option:\n1. Mage\n2. Paladin\n3. Fighter");
 
     if (userName && userChoice) {
         // Save data in session cookies
